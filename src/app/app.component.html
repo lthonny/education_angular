@@ -6,19 +6,35 @@
       <input type="text" placeholder="Название" [(ngModel)]="todoTitle">
     </div>
     <button class="btn" (click)="addTodo()">Добавить</button>
-    <button class="btn">Загрузить</button>
+    <button class="btn" (click)="fetchTodos()">Загрузить</button>
   </div>
 
   <hr>
 
-  <div class="card" *ngFor="let todo of todos">
-    <p>
-      <span [class.completed]="todo.completed">{{todo.title | titlecase}}</span>
-      <span>
-        <button class="btn btn-danger">Удалить</button>
-        <button class="btn" [disabled]="todo.completed">Завершить</button>
+  <p *ngIf="error; else todosBlock" class="error">{{error}}</p>
+
+  <ng-template #todosBlock>
+
+    <div *ngIf="!loading; else loadingBlock">
+      <div *ngIf="todos.length; else noTodos">
+        <div class="card" *ngFor="let todo of todos">
+          <p>
+            <span [class.completed]="todo.completed">{{todo.title | titlecase}}</span>
+            <span>
+        <button class="btn btn-danger" (click)="removeTodo(todo.id)">Удалить</button>
+        <button class="btn" [disabled]="todo.completed" (click)="completeTodo(todo.id)">Завершить</button>
       </span>
-    </p>
-  </div>
+          </p>
+        </div>
+      </div>
+      <ng-template #noTodos>
+        <p>Нет элементов</p>
+      </ng-template>
+    </div>
+
+    <ng-template #loadingBlock>
+      <p>Загрузка...</p>
+    </ng-template>
+  </ng-template>
 
 </div>
